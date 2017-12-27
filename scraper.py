@@ -66,26 +66,27 @@ def getDates(year):
     return dates
 
 
-year = 2017
-dates = getDates(year)
-data = pd.DataFrame(columns=[ 'Date', 'Party', 'Statement', 'Previous Statement'])
+for year in range(1994, 2018):
+    dates = getDates(year)
+    data = pd.DataFrame(columns=[ 'Date', 'Party', 'Statement', 'Previous Statement'])
 
-for day in dates:
-    url = str('https://openparliament.ca/debates/2017/' + day[0:2] + '/' + day[3:5] + '/?singlepage=1')
-
-    soup = BeautifulSoup(getHTML(url), 'lxml')
-    soup.prettify()
-
-    partyblocks = soup.findAll("div", { "class" : "l-ctx-col" })
-    statementblocks = soup.findAll("div", { "class" : "text-col" })
-
-    partyAffiliation = findParties(partyblocks)
-    statementText = findStatements(statementblocks)
-    previousText = findPrevious(statementText)
-    dateoOfStatement = str(year) + '-' + day
-    temp = pd.DataFrame({'Date': dateoOfStatement, 'Party' : partyAffiliation, 'Statement': statementText, 'Previous Statement': previousText})
-    data = pd.concat([temp, data])
+    temp = getYearData(dates)
 
 
+    for day in dates:
+        url = str('https://openparliament.ca/debates/2017/' + day[0:2] + '/' + day[3:5] + '/?singlepage=1')
 
-data.to_csv('data.csv',encoding='utf-8', index=False)
+        soup = BeautifulSoup(getHTML(url), 'lxml')
+        soup.prettify()
+
+        partyblocks = soup.findAll("div", { "class" : "l-ctx-col" })
+        statementblocks = soup.findAll("div", { "class" : "text-col" })
+
+        partyAffiliation = findParties(partyblocks)
+        statementText = findStatements(statementblocks)
+        previousText = findPrevious(statementText)
+        dateoOfStatement = str(year) + '-' + day
+        temp = pd.DataFrame({'Date': dateoOfStatement, 'Party' : partyAffiliation, 'Statement': statementText, 'Previous Statement': previousText})
+        data = pd.concat([temp, data])
+
+    data.to_csv('data' + str(year) + '.csv',encoding='utf-8', index=False)
