@@ -66,12 +66,12 @@ def getDates(year):
     return dates
 
 
-year = 2017
+year = 2012
 dates = getDates(year)
 data = pd.DataFrame(columns=[ 'Date', 'Party', 'Statement', 'Previous Statement'])
 
 for day in dates:
-    url = str('https://openparliament.ca/debates/2017/' + day[0:2] + '/' + day[3:5] + '/?singlepage=1')
+    url = str('https://openparliament.ca/debates/2012/' + day[0:2] + '/' + day[3:5] + '/?singlepage=1')
 
     soup = BeautifulSoup(getHTML(url), 'lxml')
     soup.prettify()
@@ -88,4 +88,4 @@ for day in dates:
 
 
 
-data.to_csv('data.csv',encoding='utf-8', index=False)
+data.to_csv('data-2012.csv',encoding='utf-8', index=False)
